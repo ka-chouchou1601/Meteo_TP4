@@ -2,9 +2,9 @@ package fr.univ_smb.iae.tp4.kanyongc;
 
 import java.io.IOException;
 
+
 //import java.io.PrintWriter;
 import java.net.Socket;
-//import java.util.Scanner;
 
 import java.net.ServerSocket;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import fr.univ_smb.iae.tp4.kanyongc.bulletins.BulletinMeteo;
 import fr.univ_smb.iae.tp4.kanyongc.bulletins.Bulletin;
 import fr.univ_smb.iae.tp4.kanyongc.bulletins.BulletinAvalanche;
 import java.util.Scanner;
-//import fr.univ_smb.iae.tp4.kanyongc.ClientMeteo;
+import fr.univ_smb.iae.tp4.kanyongc.ClientMeteo;
 
 public class ServeurMeteo {
 //Question 1 associé  
@@ -92,26 +92,7 @@ public class ServeurMeteo {
         }
     }
 
-    //Question 4 Afficher meteo  
- // Méthode statique pour afficher tous les bulletins dans une collection donnée
-//    public static void afficherBulletins(ArrayList<Bulletin> bulletins) {
-//        System.out.println("===== Affichage des bulletins meteo =====\n");
-//        for (BulletinMeteo bulletin : bulletins) {
-//            System.out.println(bulletin.toString()); // Utilisation de la méthode toString de BulletinMeteo
-//        }
-//    }
- // TP4 Elle permet de retourner TOUS les bulletins trouves
- // dans l'historique dont la zone geo correspond a celle
- // passee en parametre.
-// public ArrayList<BulletinMeteo> rechercherBulletins(String zoneG) {
-//     ArrayList<BulletinMeteo> bulletins = new ArrayList<BulletinMeteo>();  // Liste pour stocker les bulletins trouvés
-//     for (BulletinMeteo bulletin : this.getBulletinsMeteo()) {  // Parcours des bulletins météo
-//         if (bulletin.getZone_geo().equals(zoneG)) {  // Vérification si la zone géographique correspond
-//             bulletins.add(bulletin);  // Si correspondance, ajout du bulletin à la liste
-//         }
-//     }
-//     return bulletins;  // Retourne la liste des bulletins trouvés
-// }
+   
     
  // Méthode pour afficher tous les bulletins (bulletins météo et bulletins d'avalanche)
     public static void afficherBulletins(ArrayList<Bulletin> bulletins) {
@@ -175,9 +156,6 @@ public class ServeurMeteo {
         ServeurMeteo.afficherBulletins(serveur.rechercherBulletins("Paris"));
       
         
-//        String zoneAvalanche = "Chamonix";
-//        System.out.println("\nRecherche des bulletins d'avalanche pour la zone : " + zoneAvalanche);
-//        serveur.rechercherBulletinsAvalanche(zoneAvalanche);  // Appel de la méthode parce que dans la methode il ya un if else qui appelle afficher meteo 
 
         // Utiliser un scanner pour obtenir la zone de l'utilisateur
         Scanner scanner = new Scanner(System.in); // Création d'un Scanner
@@ -189,6 +167,8 @@ public class ServeurMeteo {
         serveur.rechercherBulletinsAvalanche(zoneAvalanche);  // Appel de la méthode avec la zone entrée
 
         scanner.close(); // Fermer le scanner
+    }
+}
         
         //Question 3
         //Créer un scanner pour lire l'entrée de l'utilisateur
@@ -212,9 +192,27 @@ public class ServeurMeteo {
 //        scanner.close();  // Fermer le scanner
    
         //
-
+        //Question 4 Afficher meteo  
+        // Méthode statique pour afficher tous les bulletins dans une collection donnée
+//           public static void afficherBulletins(ArrayList<Bulletin> bulletins) {
+//               System.out.println("===== Affichage des bulletins meteo =====\n");
+//               for (BulletinMeteo bulletin : bulletins) {
+//                   System.out.println(bulletin.toString()); // Utilisation de la méthode toString de BulletinMeteo
+//               }
+//           }
+        // TP4 Elle permet de retourner TOUS les bulletins trouves
+        // dans l'historique dont la zone geo correspond a celle
+        // passee en parametre.
+       // public ArrayList<BulletinMeteo> rechercherBulletins(String zoneG) {
+//            ArrayList<BulletinMeteo> bulletins = new ArrayList<BulletinMeteo>();  // Liste pour stocker les bulletins trouvés
+//            for (BulletinMeteo bulletin : this.getBulletinsMeteo()) {  // Parcours des bulletins météo
+//                if (bulletin.getZone_geo().equals(zoneG)) {  // Vérification si la zone géographique correspond
+//                    bulletins.add(bulletin);  // Si correspondance, ajout du bulletin à la liste
+//                }
+//            }
+//            return bulletins;  // Retourne la liste des bulletins trouvés
+       // }
       
 
          
-    }
-}
+
