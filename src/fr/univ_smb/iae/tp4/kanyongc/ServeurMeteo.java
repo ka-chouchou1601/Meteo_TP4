@@ -99,6 +99,7 @@ public class ServeurMeteo {
         System.out.println("===== Affichage des bulletins =====\n");
         for (Bulletin bulletin : bulletins) {
             System.out.println(bulletin.toString()); // Assumes toString is overridden in Bulletin and its subclasses
+            bulletin.interpreter(); // Call the interpreter method for each bulletin
         }
     }
     //Question=>10 adapting the whole code to Bulletin being the superclass
@@ -155,13 +156,13 @@ public class ServeurMeteo {
         System.out.println("\nBulletins météo trouvés pour la zone Paris :");
         ServeurMeteo.afficherBulletins(serveur.rechercherBulletins("Paris"));
       //Question 12
-        // Ajout de deux bulletins d'avalanche manuellement (en plus de l'historique)
-        BulletinAvalanche bulletinAvalanche1 = new BulletinAvalanche("Risque élevé d'avalanche", "Val Thorens", 60);
-        BulletinAvalanche bulletinAvalanche2 = new BulletinAvalanche("Risque modéré d'avalanche", "Courchevel", 30);
+       // Ajout de deux bulletins d'avalanche manuellement (en plus de l'historique)
+       BulletinAvalanche bulletinAvalanche1 = new BulletinAvalanche("Risque élevé d'avalanche", "Val Thorens", 60);
+       BulletinAvalanche bulletinAvalanche2 = new BulletinAvalanche("Risque modéré d'avalanche", "Courchevel", 30);
         
-        // Ajout des bulletins d'avalanche dans l'historique
-        serveur.getBulletinsMeteo().add(bulletinAvalanche1);
-        serveur.getBulletinsMeteo().add(bulletinAvalanche2);
+       // Ajout des bulletins d'avalanche dans l'historique
+       serveur.getBulletinsMeteo().add(bulletinAvalanche1);
+      serveur.getBulletinsMeteo().add(bulletinAvalanche2);
 
         // Utiliser un scanner pour obtenir la zone de l'utilisateur
         Scanner scanner = new Scanner(System.in); // Création d'un Scanner
@@ -176,6 +177,18 @@ public class ServeurMeteo {
     }
 }
     
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
