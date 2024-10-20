@@ -8,7 +8,7 @@ public class BulletinAvalanche extends BulletinMeteo {
     private int niveauRisque; // Niveau de risque, par défaut à 3
 
     public BulletinAvalanche(String avis, String zone_geo, int hauteurNeigeFraiche) {
-        super(avis);
+        super();// Appel du constructeur de BulletinMeteo 
         this.setZone_geo(zone_geo);
         this.hauteurNeigeFraiche = hauteurNeigeFraiche;
         this.niveauRisque = 3; // Valeur par défaut

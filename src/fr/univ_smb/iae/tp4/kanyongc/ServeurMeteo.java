@@ -12,7 +12,7 @@ import fr.univ_smb.iae.tp4.kanyongc.bulletins.BulletinMeteo;
 import fr.univ_smb.iae.tp4.kanyongc.bulletins.Bulletin;
 import fr.univ_smb.iae.tp4.kanyongc.bulletins.BulletinAvalanche;
 import java.util.Scanner;
-import fr.univ_smb.iae.tp4.kanyongc.ClientMeteo;
+//import fr.univ_smb.iae.tp4.kanyongc.ClientMeteo;
 
 public class ServeurMeteo {
 //Question 1 associé  
@@ -80,15 +80,15 @@ public class ServeurMeteo {
                 System.out.println("===== Affichage de l'historique des bulletins après " + nbRequetesTraitees + " requêtes =====");
                 ServeurMeteo.afficherBulletins(this.getBulletinsMeteo());
                 
-                // Générer et ajouter un nouveau bulletin météo aléatoire à l'historique
-                BulletinMeteo nouveauBulletin = BulletinMeteo.randomBulletinMeteo();
-                this.bulletinsMeteo.add(nouveauBulletin);
+                
+                BulletinMeteo nouveauBulletin = new BulletinMeteo();
+               this.bulletinsMeteo.add(new BulletinMeteo());
+
+                
                 System.out.println("Nouveau bulletin météo ajouté à l'historique : " + nouveauBulletin.toString());
             }
 
-            // Ici, vous pouvez envoyer la météo au client (ce code existe probablement déjà)
-            // Utiliser la méthode pour répondre au client avec les bulletins météo
-            // ...
+            
         }
     }
 
@@ -154,8 +154,14 @@ public class ServeurMeteo {
         // Affiche uniquement les bulletins météo de la zone "Paris"
         System.out.println("\nBulletins météo trouvés pour la zone Paris :");
         ServeurMeteo.afficherBulletins(serveur.rechercherBulletins("Paris"));
-      
+      //Question 12
+        // Ajout de deux bulletins d'avalanche manuellement (en plus de l'historique)
+        BulletinAvalanche bulletinAvalanche1 = new BulletinAvalanche("Risque élevé d'avalanche", "Val Thorens", 60);
+        BulletinAvalanche bulletinAvalanche2 = new BulletinAvalanche("Risque modéré d'avalanche", "Courchevel", 30);
         
+        // Ajout des bulletins d'avalanche dans l'historique
+        serveur.getBulletinsMeteo().add(bulletinAvalanche1);
+        serveur.getBulletinsMeteo().add(bulletinAvalanche2);
 
         // Utiliser un scanner pour obtenir la zone de l'utilisateur
         Scanner scanner = new Scanner(System.in); // Création d'un Scanner
@@ -169,7 +175,10 @@ public class ServeurMeteo {
         scanner.close(); // Fermer le scanner
     }
 }
-        
+    
+
+
+
         //Question 3
         //Créer un scanner pour lire l'entrée de l'utilisateur
 //        Scanner scanner = new Scanner(System.in);
@@ -212,6 +221,11 @@ public class ServeurMeteo {
 //            }
 //            return bulletins;  // Retourne la liste des bulletins trouvés
        // }
+
+//Générer et ajouter un nouveau bulletin météo aléatoire à l'historique
+//methode main
+//BulletinMeteo nouveauBulletin = BulletinMeteo.randomBulletinMeteo();
+//this.bulletinsMeteo.add(nouveauBulletin);
       
 
          
