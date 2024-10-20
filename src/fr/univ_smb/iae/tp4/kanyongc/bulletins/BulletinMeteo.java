@@ -23,7 +23,7 @@ public class BulletinMeteo extends Bulletin {
 
         // Définition de la zone géographique aléatoire
         this.zone_geo = geoZones[ThreadLocalRandom.current().nextInt(0, geoZones.length)];
-    }
+    }//chatgpt
   
 
     // Méthode setter pour définir la zone géographique
