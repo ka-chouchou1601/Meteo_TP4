@@ -45,6 +45,7 @@ public class BulletinAvalanche extends BulletinMeteo {
                " - Neige fraîche : " + hauteurNeigeFraiche + " cm - Niveau de risque : " + niveauRisque;
     }
     // Implémentation de la méthode abstraite interpreter
+    // un bulletin d'avalanche par un nivologue.
     @Override
     public void interpreter() {
         System.out.println("Le bulletin est interprété par un nivologue\n");

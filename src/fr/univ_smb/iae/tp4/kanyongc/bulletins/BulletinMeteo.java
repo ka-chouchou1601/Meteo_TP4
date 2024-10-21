@@ -41,8 +41,9 @@ public class BulletinMeteo extends Bulletin {
     public String toString() {
         return super.toString() + " (" + this.zone_geo + ")"; // Appel de toString() de Bulletin
     }
+    //un bulletin météo par un métérologue;
+ 
  // Implémentation de la méthode abstraite interpreter
-    
     public void interpreter() {
         System.out.println("Le bulletin est interprété par un métérologue\n");
     }

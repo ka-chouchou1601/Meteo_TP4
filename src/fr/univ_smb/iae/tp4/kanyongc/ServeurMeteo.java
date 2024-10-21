@@ -1,8 +1,9 @@
 package fr.univ_smb.iae.tp4.kanyongc;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-
-
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 //import java.io.PrintWriter;
 import java.net.Socket;
 
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import fr.univ_smb.iae.tp4.kanyongc.bulletins.BulletinMeteo;
 import fr.univ_smb.iae.tp4.kanyongc.bulletins.Bulletin;
 import fr.univ_smb.iae.tp4.kanyongc.bulletins.BulletinAvalanche;
+import fr.univ_smb.iae.tp4.kanyongc.bulletins.EnsembleDeBulletinsMeteo;
 import java.util.Scanner;
 //import fr.univ_smb.iae.tp4.kanyongc.ClientMeteo;
 
@@ -19,9 +21,11 @@ public class ServeurMeteo {
     //private ArrayList<BulletinMeteo> bulletinsMeteo;
 
     // Changez de ArrayList<BulletinMeteo> à ArrayList<Bulletin>
-    private ArrayList<Bulletin> bulletinsMeteo; // List can hold both BulletinMeteo and BulletinAvalanche
+	 private EnsembleDeBulletinsMeteo bulletinsMeteo; // Use EnsembleDeBulletinsMeteo
+    //private ArrayList<Bulletin> bulletinsMeteo; // List can hold both BulletinMeteo and BulletinAvalanche
     private int port = 9090;
     private ServerSocket serveurSocket;
+    
 
     // Constructeur qui génère un historique automatiquement
     // question 2 
@@ -30,8 +34,8 @@ public class ServeurMeteo {
 //    }
     // Constructeur : génère un historique automatiquement
     public ServeurMeteo() {
-        this.bulletinsMeteo = new ArrayList<>();
-        
+       // this.bulletinsMeteo = new ArrayList<>();
+    	 this.bulletinsMeteo = new EnsembleDeBulletinsMeteo();
         // Ajout de quelques bulletins météo aléatoires
         this.bulletinsMeteo.addAll(BulletinMeteo.genererUnHistorique());
         
@@ -46,71 +50,118 @@ public class ServeurMeteo {
         }
     }
 
-    public ArrayList<Bulletin> getBulletinsMeteo() {
+//    public ArrayList<Bulletin> getBulletinsMeteo() {
+//        return this.bulletinsMeteo;
+//    }
+    //POur obtenir les bulletin meteo
+    public EnsembleDeBulletinsMeteo getBulletinsMeteo() {
         return this.bulletinsMeteo;
     }
 
-    public void setBulletinsMeteo(ArrayList<Bulletin> bulletinsMeteo) {
+    public void setBulletinsMeteo(EnsembleDeBulletinsMeteo bulletinsMeteo) {
         this.bulletinsMeteo = bulletinsMeteo;
     }
 
+    // Open the connection and use the class-level ServerSocket
     public void ouvrirConnexion() throws IOException {
-        ServerSocket serveurSocket = new ServerSocket(this.port);
+        this.serveurSocket = new ServerSocket(this.port); // Assign to the class-level field
         System.out.println("Serveur prêt sur le port " + this.port);
     }
+
     
 	// On utilise desormais les sockets pour avoir une application client-serveur
 	
 //Question 7 =>Nouveau bulletin aleatoire apres 5 demandes 
     public void donnerMeteo() throws IOException {
-        // Initialisation d'un compteur pour suivre le nombre de requêtes traitées
         int nbRequetesTraitees = 0;
-        ServerSocket serveurSocket = new ServerSocket(this.port);  // Ouvrir une connexion serveur
-        
-        while (true) {
-            // Le serveur accepte une nouvelle connexion (requête client)
-            Socket socket = serveurSocket.accept();  // Accepter une nouvelle requête client
-            
-            // Incrémentation du compteur à chaque nouvelle requête
-            nbRequetesTraitees++;
-            
-            // Toutes les 5 requêtes (si le compteur est un multiple de 5)
-            if (nbRequetesTraitees % 5 == 0) {
-                // Afficher l'historique des bulletins météo
-                System.out.println("===== Affichage de l'historique des bulletins après " + nbRequetesTraitees + " requêtes =====");
-                ServeurMeteo.afficherBulletins(this.getBulletinsMeteo());
-                
-                
-                BulletinMeteo nouveauBulletin = new BulletinMeteo();
-               this.bulletinsMeteo.add(new BulletinMeteo());
 
-                
-                System.out.println("Nouveau bulletin météo ajouté à l'historique : " + nouveauBulletin.toString());
+        try {
+            ouvrirConnexion(); // Ouvre la connexion du serveur
+
+            while (true) {
+                Socket socket = serveurSocket.accept(); // Accepte les connexions des clients
+
+                try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                     PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) {
+
+                    String request = in.readLine();
+                    nbRequetesTraitees++; // Incrémentation du compteur de requêtes
+
+                    // Si la requête est "getWeather", envoie les bulletins météo au client
+                    if (request != null && request.equalsIgnoreCase("getWeather")) {
+                    	EnsembleDeBulletinsMeteo bulletins = this.getBulletinsMeteo();
+                        StringBuilder response = new StringBuilder();
+
+                        for (Bulletin bulletin : bulletins) {
+                            response.append(bulletin.toString()).append("\n");
+                        }
+                        out.println(response.toString());
+                    }
+
+                    // Toutes les 5 requêtes, affiche l'historique et ajoute un nouveau bulletin
+                    if (nbRequetesTraitees % 5 == 0) {
+                        System.out.println("===== Historique des bulletins après " + nbRequetesTraitees + " requêtes =====");
+                        ServeurMeteo.afficherBulletins(this.getBulletinsMeteo());
+
+                        BulletinMeteo nouveauBulletin = new BulletinMeteo();
+                        this.bulletinsMeteo.add(nouveauBulletin);
+                        System.out.println("Nouveau bulletin ajouté : " + nouveauBulletin.toString());
+                    }
+
+                } catch (IOException e) {
+                    System.err.println("Erreur lors de la gestion de la connexion : " + e.getMessage());
+                }
             }
-
-            
+        } catch (IOException e) {
+            System.err.println("Erreur lors de l'ouverture du serveur : " + e.getMessage());
+        } finally {
+            // Ferme la socket lorsque le serveur s'arrête
+            if (serveurSocket != null && !serveurSocket.isClosed()) {
+                serveurSocket.close();
+            }
         }
     }
 
-   
+
+
+
+//    // Méthode pour afficher tous les bulletins (bulletins météo et bulletins d'avalanche)
+//    public static void afficherBulletins(EnsembleDeBulletinsMeteo bulletinsMeteo ) { // Using EnsembleDeBulletinsMeteo
+//        System.out.println("===== Affichage des bulletins =====\n");
+//        for (Bulletin bulletin : bulletinsMeteo) { // Using EnsembleDeBulletinsMeteo
+//            System.out.println(bulletin.toString()); // Assumes toString is overridden in Bulletin and its subclasses
+//            bulletin.interpreter(); // Call the interpreter method for each bulletin
+//        }
+//    }
     
- // Méthode pour afficher tous les bulletins (bulletins météo et bulletins d'avalanche)
-    public static void afficherBulletins(ArrayList<Bulletin> bulletins) {
+// // Méthode pour afficher tous les bulletins (bulletins météo et bulletins d'avalanche)
+//    public static void afficherBulletins(ArrayList<Bulletin> bulletins) {
+//        System.out.println("===== Affichage des bulletins =====\n");
+//        for (Bulletin bulletin : bulletins) {
+//            System.out.println(bulletin.toString()); // Assumes toString is overridden in Bulletin and its subclasses
+//            bulletin.interpreter(); // Call the interpreter method for each bulletin
+//        }
+//    }
+    
+    public static void afficherBulletins(EnsembleDeBulletinsMeteo bulletins) {
         System.out.println("===== Affichage des bulletins =====\n");
         for (Bulletin bulletin : bulletins) {
             System.out.println(bulletin.toString()); // Assumes toString is overridden in Bulletin and its subclasses
             bulletin.interpreter(); // Call the interpreter method for each bulletin
         }
     }
+
     //Question=>10 adapting the whole code to Bulletin being the superclass
  // Modification de la méthode rechercherBulletins()
-    public ArrayList<Bulletin> rechercherBulletins(String zoneG) {
-        ArrayList<Bulletin> bulletins = new ArrayList<>();  // Liste pour stocker les bulletins trouvés
-        for (Bulletin bulletin : this.getBulletinsMeteo()) {
+    public  EnsembleDeBulletinsMeteo rechercherBulletins(String zoneG) {
+        //ArrayList<Bulletin> bulletins = new ArrayList<>();  // Liste pour stocker les bulletins trouvés
+    	EnsembleDeBulletinsMeteo bulletins = new EnsembleDeBulletinsMeteo();
+    	for (Bulletin bulletin : this.getBulletinsMeteo()) {
             if (bulletin instanceof BulletinMeteo) {  // Vérifier si c'est un bulletin météo
                 BulletinMeteo bulletinMeteo = (BulletinMeteo) bulletin;
                 if (bulletinMeteo.getZone_geo().equals(zoneG)) {
-                    bulletins.add(bulletin); // Ajouter à la liste des bulletins trouvés
+                    bulletins.add((BulletinMeteo) bulletin); //// Cast explicite nécessaire pour ajouter à EnsembleDeBulletinsMeteo
+                    // Ajouter à la liste des bulletins trouvés =>question15
                 }
             }
         }
@@ -118,34 +169,60 @@ public class ServeurMeteo {
     }
     //Question10
     //Nouvelle méthode pour rechercher et afficher les bulletins d'avalanche pour une zone spécifique
+//    public void rechercherBulletinsAvalanche(String zoneAvalanche) {
+//        ArrayList<Bulletin> bulletinsAvalanche = new ArrayList<>();
+//
+//        // Iterate through the bulletins to filter those that are instances of BulletinAvalanche
+//        for (Bulletin bulletin : this.getBulletinsMeteo()) {
+//            // Check if the bulletin is an instance of BulletinAvalanche
+//            if (bulletin instanceof BulletinAvalanche) {
+//                // Cast the bulletin to BulletinMeteo to access getZone_geo()
+//                BulletinMeteo bulletinMeteo = (BulletinMeteo) bulletin;
+//                if (bulletinMeteo.getZone_geo().equals(zoneAvalanche)) {
+//                    bulletinsAvalanche.add(bulletin);
+//                }
+//            }
+//        }
+//
+//        // Check if any avalanche bulletins were found and display them
+//        if (bulletinsAvalanche.isEmpty()) {
+//            System.out.println("Aucun bulletin d'avalanche trouvé pour la zone " + zoneAvalanche);
+//        } else {
+//            // Display the found avalanche bulletins
+//            ServeurMeteo.afficherBulletins(new ArrayList<>(bulletinsAvalanche));
+//        }
+//    }
+    
     public void rechercherBulletinsAvalanche(String zoneAvalanche) {
-        ArrayList<Bulletin> bulletinsAvalanche = new ArrayList<>();
+        // Utilisation d'EnsembleDeBulletinsMeteo à la place d'ArrayList
+        EnsembleDeBulletinsMeteo bulletinsAvalanche = new EnsembleDeBulletinsMeteo();
 
-        // Iterate through the bulletins to filter those that are instances of BulletinAvalanche
+        // Parcourir les bulletins pour filtrer ceux qui sont des instances de BulletinAvalanche
         for (Bulletin bulletin : this.getBulletinsMeteo()) {
-            // Check if the bulletin is an instance of BulletinAvalanche
             if (bulletin instanceof BulletinAvalanche) {
-                // Cast the bulletin to BulletinMeteo to access getZone_geo()
                 BulletinMeteo bulletinMeteo = (BulletinMeteo) bulletin;
                 if (bulletinMeteo.getZone_geo().equals(zoneAvalanche)) {
-                    bulletinsAvalanche.add(bulletin);
+                    bulletinsAvalanche.add(bulletinMeteo);  // Ajouter le bulletin trouvé
                 }
             }
         }
 
-        // Check if any avalanche bulletins were found and display them
+        // Vérifier s'il y a des bulletins d'avalanche trouvés et les afficher
         if (bulletinsAvalanche.isEmpty()) {
             System.out.println("Aucun bulletin d'avalanche trouvé pour la zone " + zoneAvalanche);
         } else {
-            // Display the found avalanche bulletins
-            ServeurMeteo.afficherBulletins(new ArrayList<>(bulletinsAvalanche));
+            // Afficher les bulletins d'avalanche trouvés
+            ServeurMeteo.afficherBulletins(bulletinsAvalanche);
         }
     }
+
+
 
     public static void main(String[] args) throws IOException {
         // Création du serveur et génération de l'historique automatiquement
         ServeurMeteo serveur = new ServeurMeteo();
-        serveur.ouvrirConnexion();
+       // serveur.ouvrirConnexion();
+        serveur.donnerMeteo(); // Utilisez donnerMeteo pour gérer les connexions
         
         // Affiche tous les bulletins de l'historique
         System.out.println("Affichage de l'historique des bulletins météo :");

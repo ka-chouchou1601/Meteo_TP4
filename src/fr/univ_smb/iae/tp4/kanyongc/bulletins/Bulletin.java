@@ -23,7 +23,9 @@ import java.util.Date;
 	    public String toString() {
 	        return "Bulletin du " + this.date_avis + " - Avis : " + this.getAvis();
 	    }
-	    // Méthode abstraite à implémenter par les sous-classes
+	    // Méthode abstraite à implémenter par les sous-classes 
+	    //Cette méthode est abstraite car on ne sait pas interpréter un bulletin quelconque;
+	    
 	    public abstract void interpreter();
 	}
 
