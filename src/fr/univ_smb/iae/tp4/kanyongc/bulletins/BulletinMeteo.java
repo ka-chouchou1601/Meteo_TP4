@@ -2,6 +2,7 @@ package fr.univ_smb.iae.tp4.kanyongc.bulletins;
 
 import java.util.ArrayList;
 
+
 import java.util.concurrent.ThreadLocalRandom;
 
 public class BulletinMeteo extends Bulletin {
@@ -44,8 +45,9 @@ public class BulletinMeteo extends Bulletin {
     //un bulletin météo par un métérologue;
  
  // Implémentation de la méthode abstraite interpreter
-    public void interpreter() {
-        System.out.println("Le bulletin est interprété par un métérologue\n");
+    public String interpreter() {
+        // Ne plus afficher sur le serveur, simplement retourner le texte
+        return "Le bulletin est interprété par un métérologue";
     }
  
  // Question 6: Random bulletin meteo added to genererUnHistorique :Modification de la méthode genererUnHistorique() pour utiliser randomBulletinMeteo()

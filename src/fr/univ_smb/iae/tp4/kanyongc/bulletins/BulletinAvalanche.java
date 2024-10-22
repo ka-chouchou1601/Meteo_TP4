@@ -16,9 +16,9 @@ public class BulletinAvalanche extends BulletinMeteo {
     private static final int[] niveauxRisque = {0, 1, 2, 3, 4, 5};
 
     //Constructor avalanche 
-    public BulletinAvalanche(String avis, String zone_geo, int hauteurNeigeFraiche) {
+    public BulletinAvalanche( ) {
         super();// Appel du constructeur de BulletinMeteo sans parametre avant il y avait un parametre 
-        this.setZone_geo(zone_geo);
+       // this.setZone_geo(zone_geo);
         // Sélectionner aléatoirement une hauteur de neige fraîche dans le tableau prédéfini
         this.hauteurNeigeFraiche = hauteursNeige[ThreadLocalRandom.current().nextInt(0, hauteursNeige.length)];
      // Sélectionner aléatoirement un niveau de risque dans le tableau prédéfini
@@ -46,9 +46,10 @@ public class BulletinAvalanche extends BulletinMeteo {
     }
     // Implémentation de la méthode abstraite interpreter
     // un bulletin d'avalanche par un nivologue.
-    @Override
-    public void interpreter() {
-        System.out.println("Le bulletin est interprété par un nivologue\n");
+    public String interpreter() {
+        // Ne plus afficher sur le serveur, simplement retourner le texte
+        return "Le bulletin est interprété par un nivologue";
     }
-}
+    }
+
 

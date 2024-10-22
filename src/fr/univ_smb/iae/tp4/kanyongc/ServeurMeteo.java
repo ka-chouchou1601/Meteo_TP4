@@ -39,15 +39,9 @@ public class ServeurMeteo {
         // Ajout de quelques bulletins météo aléatoires
         this.bulletinsMeteo.addAll(BulletinMeteo.genererUnHistorique());
         
-        // Ajout de quelques bulletins d'avalanche aléatoires pour diversifier
-        for (int i = 0; i < 2; i++) {  // Par exemple, on ajoute 2 bulletins d'avalanche
-            this.bulletinsMeteo.add(new BulletinAvalanche("Avalanche modérée", "Chamonix", 50));
-            this.bulletinsMeteo.add(new BulletinAvalanche("Avalanche forte", "Paris", 80));
-            this.bulletinsMeteo.add(new BulletinAvalanche("Avalanche légère", "Grenoble", 30));
-            this.bulletinsMeteo.add(new BulletinAvalanche("Avalanche modérée", "Annecy", 40));
-            this.bulletinsMeteo.add(new BulletinAvalanche("Avalanche sévère", "Lyon", 90));
-            this.bulletinsMeteo.add(new BulletinAvalanche("Avalanche légère", "Chambéry", 20));
-        }
+        for (int i = 0; i < 10; i++) { // Adjust the number as needed
+            this.bulletinsMeteo.add(new BulletinAvalanche());
+    }
     }
 
 //    public ArrayList<Bulletin> getBulletinsMeteo() {
@@ -94,7 +88,10 @@ public class ServeurMeteo {
 
                         for (Bulletin bulletin : bulletins) {
                             response.append(bulletin.toString()).append("\n");
+                            response.append("Interprétation : ").append(bulletin.interpreter()).append("\n");
                         }
+                        
+                       
                         out.println(response.toString());
                     }
 
@@ -228,19 +225,7 @@ public class ServeurMeteo {
         System.out.println("Affichage de l'historique des bulletins météo :");
         ServeurMeteo.afficherBulletins(serveur.getBulletinsMeteo());
         
-        // Question 4
-        // Affiche uniquement les bulletins météo de la zone "Paris"
-        System.out.println("\nBulletins météo trouvés pour la zone Paris :");
-        ServeurMeteo.afficherBulletins(serveur.rechercherBulletins("Paris"));
-      //Question 12
-       // Ajout de deux bulletins d'avalanche manuellement (en plus de l'historique)
-       BulletinAvalanche bulletinAvalanche1 = new BulletinAvalanche("Risque élevé d'avalanche", "Val Thorens", 60);
-       BulletinAvalanche bulletinAvalanche2 = new BulletinAvalanche("Risque modéré d'avalanche", "Courchevel", 30);
-        
-       // Ajout des bulletins d'avalanche dans l'historique
-       serveur.getBulletinsMeteo().add(bulletinAvalanche1);
-      serveur.getBulletinsMeteo().add(bulletinAvalanche2);
-
+       
         // Utiliser un scanner pour obtenir la zone de l'utilisateur
         Scanner scanner = new Scanner(System.in); // Création d'un Scanner
         System.out.println("\nEntrez la zone pour la recherche des bulletins d'avalanche :");
@@ -317,6 +302,9 @@ public class ServeurMeteo {
 //BulletinMeteo nouveauBulletin = BulletinMeteo.randomBulletinMeteo();
 //this.bulletinsMeteo.add(nouveauBulletin);
       
-
+// Question 4
+// Affiche uniquement les bulletins météo de la zone "Paris"
+// System.out.println("\nBulletins météo trouvés pour la zone Paris :");
+//ServeurMeteo.afficherBulletins(serveur.rechercherBulletins("Paris"));
          
 

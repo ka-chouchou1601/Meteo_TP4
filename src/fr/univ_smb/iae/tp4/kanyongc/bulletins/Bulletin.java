@@ -26,6 +26,8 @@ import java.util.Date;
 	    // Méthode abstraite à implémenter par les sous-classes 
 	    //Cette méthode est abstraite car on ne sait pas interpréter un bulletin quelconque;
 	    
-	    public abstract void interpreter();
+	    public abstract String interpreter();
+	 // Nouvelle méthode qui renvoie l'interprétation sous forme de chaîne
+	   
 	}
 
