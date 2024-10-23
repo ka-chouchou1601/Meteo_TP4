@@ -55,14 +55,47 @@ public class ClientMeteo {
      * ou son nom (hostname).
      * Ensuite, il se connecte à ce serveur et affiche ce qui lui retourne le serveur.
      */
+    
+// // Méthode pour demander à l'utilisateur de saisir la zone d'avalanche
+//    public String demanderZoneAvalanche() {
+//        Scanner clavier = new Scanner(System.in);
+//        try {
+//            System.out.println("Saisir la zone d'avalanche : ");
+//            return clavier.nextLine(); // Lire la ligne complète
+//        } finally {
+//            // clavier.close();  // Vous pourriez ne pas vouloir fermer le scanner ici pour ne pas fermer System.in
+//        }
+//    }
+
+//    public static void main(String[] args) {
+//        ClientMeteo client = new ClientMeteo(9090);
+//        String adresseDuServeur = client.demanderSaisieIP();
+//        try (Socket socket = client.ouvrirConnexion(adresseDuServeur)) {
+//        	
+//            
+//        	client.afficherMeteo(client.demanderMeteo(socket));
+//        } catch (IOException e) {
+//            System.err.println("Erreur de connexion au serveur : " + e.getMessage());
+//        }
+//        System.exit(0);
+//    }
     public static void main(String[] args) {
         ClientMeteo client = new ClientMeteo(9090);
         String adresseDuServeur = client.demanderSaisieIP();
-        try (Socket socket = client.ouvrirConnexion(adresseDuServeur)) {
-            client.afficherMeteo(client.demanderMeteo(socket));
-        } catch (IOException e) {
-            System.err.println("Erreur de connexion au serveur : " + e.getMessage());
+
+        // Boucle qui relance la connexion 5 fois
+        for (int i = 0; i < 5; i++) {
+            try (Socket socket = client.ouvrirConnexion(adresseDuServeur)) {
+                // Demander la météo et afficher le résultat
+                client.afficherMeteo(client.demanderMeteo(socket));
+            } catch (IOException e) {
+                System.err.println("Erreur de connexion au serveur : " + e.getMessage());
+            }
+
+            System.out.println("Reconnexion automatique... (" + (i + 1) + "/5)\n");
         }
+
+        System.out.println("Toutes les tentatives de connexion ont été effectuées.");
         System.exit(0);
     }
 

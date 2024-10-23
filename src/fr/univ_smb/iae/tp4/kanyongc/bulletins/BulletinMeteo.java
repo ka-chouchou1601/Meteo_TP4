@@ -58,7 +58,8 @@ public class BulletinMeteo extends Bulletin {
         for (int i = 0; i < MAX_BULLETINS; i++) {
            
             // Ajout du bulletin généré à la liste des bulletins
-            bulletins.add(new BulletinMeteo());// Utilisation du constructeur sans paramètre afin de supprimer le randombulletinmeteo
+            bulletins.add(new BulletinMeteo());
+            // Question 11: Utilisation du constructeur sans paramètre afin de supprimer le randombulletinmeteo
         }
 
         // Retourne la liste des 10 bulletins météo générés
