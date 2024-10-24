@@ -48,6 +48,7 @@ public class ClientMeteo {
         System.out.println(msg); // on affiche ce que retourne le serveur (le messageRecu)
         System.out.println("================ Fin de l'avis météo ================\n");
     }
+    
 
     /**
      * Le client est une application Java.
@@ -110,6 +111,7 @@ public class ClientMeteo {
             clavier.close();  // Ensure the scanner is closed
         }
     }
+  
 
 
     public int getPort() {
